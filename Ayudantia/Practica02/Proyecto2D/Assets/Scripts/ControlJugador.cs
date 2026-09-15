@@ -18,6 +18,11 @@ public class ControlJugador : MonoBehaviour
 
     private Jugador jugador;
 
+    private void Awake()
+    {
+        jugador = GetComponent<Jugador>();
+    }
+
     void Update()
     {
         float delta = Time.time - tiempoAnterior;
