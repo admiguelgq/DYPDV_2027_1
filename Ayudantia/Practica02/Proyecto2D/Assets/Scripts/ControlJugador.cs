@@ -20,5 +20,10 @@ public class ControlJugador : MonoBehaviour
     {
         float delta = Time.time - tiempoAnterior;
         tiempoAnterior = Time.time;
+
+        float h = Input.GetAxis("Horizontal");
+        velocidadActual += aceleracion * h * delta;
+        velocidadActual = Mathf.Clamp(velocidadActual, -velocidadMax, velocidadMax);
+        transform.position += new Vector3(velocidadActual * delta, 0, 0);
     }
 }
