@@ -16,6 +16,8 @@ public class ControlJugador : MonoBehaviour
 
     private float tiempoAnterior;
 
+    private Jugador jugador;
+
     void Update()
     {
         float delta = Time.time - tiempoAnterior;
@@ -25,5 +27,36 @@ public class ControlJugador : MonoBehaviour
         velocidadActual += aceleracion * h * delta;
         velocidadActual = Mathf.Clamp(velocidadActual, -velocidadMax, velocidadMax);
         transform.position += new Vector3(velocidadActual * delta, 0, 0);
+
+        if (Input.GetAxis("Jump") > 0 && jugador.enSuelo)
+        {
+            velocidadVertical = 10f;
+            jugador.enSuelo = false;
+            tiempoSaltoActual = 0;
+
+        }
+
+        if (!jugador.enSuelo && Input.GetAxis("Jump") > 0)
+        {
+            if (tiempoSaltoActual < tiempoMaxSalto)
+            {
+                velocidadVertical += 20f * delta;
+                tiempoSaltoActual += delta;
+            }
+        }
+
+        if (Input.GetAxis("Jump") == 0)
+        {
+            tiempoSaltoActual = tiempoMaxSalto;
+        }
+        if (jugador.enSuelo)
+        {
+            velocidadVertical = 0;
+        }
+        else
+        {
+            velocidadVertical += gravedad * delta;
+        }
+        transform.position += new Vector3(0, velocidadVertical * delta, 0);
     }
 }
