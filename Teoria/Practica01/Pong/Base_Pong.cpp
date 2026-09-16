@@ -4,13 +4,16 @@
 #include <GL/glut.h> //the glut file for windows operations
                      // it also includes gl.h and glu.h for the openGL library calls
 #include <math.h>
+#include "Jugador.h"
 
 #define PI 3.1415926535898 
 
-double xpos, ypos, ydir, xdir;         // x and y position for house to be drawn
+double xpos, ypos, ydir, xdir;    // x and y position for house to be drawn
 double sx, sy, squash;          // xy scale factors
 double rot, rdir;             // rotation
 double ball_speed;
+
+Jugador jugador(10.0,60.0); //jugador(rectangulo izquierdo)
 
 GLfloat T1[16] = {1.,0.,0.,0.,\
                   0.,1.,0.,0.,\
@@ -25,10 +28,8 @@ GLfloat T[16] = {1.,0.,0.,0.,\
                  0.,0.,1.,0.,\
                  0.,0.,0.,1.};
 
-
-
 #define PI 3.1415926535898 
-GLint circle_points = 1000; 
+GLint circle_points = 100; 
 void MyCircle2f(GLfloat centerx, GLfloat centery, GLfloat radius){
   GLint i;
   GLdouble angle;
@@ -40,10 +41,10 @@ void MyCircle2f(GLfloat centerx, GLfloat centery, GLfloat radius){
   glEnd();
 }
 
-GLfloat RadiusOfBall = 15.;
+GLfloat RadiusOfBall = 5.;
 // Draw the ball, centered at the origin
 void draw_ball() {
-  glColor3f(0.6,0.3,0.);
+  glColor3f(1.0,1.0,1.0);
   MyCircle2f(0.,0.,RadiusOfBall);
   
 }
@@ -52,11 +53,13 @@ void Display(void)
 {
   // swap the buffers
   glutSwapBuffers(); 
+  
+
 
   //clear all pixels with the specified clear color
   glClear(GL_COLOR_BUFFER_BIT);
-  // 160 is max X value in our world
 
+  // 160 is max X value in our world
  	
 	// Shape has hit the ground! Stop moving and start squashing down and then back up 
 	if (ypos == RadiusOfBall && ydir == -1  ) { 
@@ -80,7 +83,7 @@ void Display(void)
         ypos += ydir*ball_speed;
 
 	    // If ball touches the top, change direction of ball downwards
-  	    if (ypos == 120-RadiusOfBall){
+  	    if (ypos >= 120-RadiusOfBall){
     	    ydir = -1;
         }
 	    // If ball touches the bottom, change direction of ball upwards
@@ -123,6 +126,9 @@ void Display(void)
   glMultMatrixf(T1);
   
   draw_ball();
+  glLoadIdentity();
+  jugador.dibujar();
+
   glutPostRedisplay(); 
 
   
@@ -147,7 +153,7 @@ void reshape (int w, int h)
 
 void init(void){
   //set the clear color
-  glClearColor(0.0,0.8,0.0,1.0);
+  glClearColor(0.0,0.0,0.0,0.0);
   // initial position set to 0,0
   xpos = 80; ypos = RadiusOfBall; xdir = 1; ydir = 1;
   sx = 1.; sy = 1.; squash = 0.9;
@@ -155,7 +161,6 @@ void init(void){
   ball_speed = 1.5;
 
 }
-
 
 int main(int argc, char* argv[])
 {
