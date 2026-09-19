@@ -5,6 +5,21 @@ Jugador::Jugador(GLfloat x, GLfloat y) {
 	ypos = y;
 }
 
+GLfloat Jugador::getPosicionX() {
+	return xpos;
+}
+
+GLfloat Jugador::getPosicionY() {
+	return ypos;
+}
+
+GLfloat Jugador::getAnchura() {
+	return ancho_jugador;
+}
+
+GLfloat Jugador::getAltura() {
+	return alto_jugador;
+}
 
 void Jugador::movimiento(int direccion, GLfloat superior, GLfloat inferior) {
 	GLfloat nuevaPosY = ypos + (direccion * velocidad);

@@ -1,6 +1,4 @@
-//Base_Pong.cpp : A bouncing ball 
-
-//#include <windows.h> //the windows include file, required by all windows applications
+#include <windows.h> //the windows include file, required by all windows applications
 #include <GL/glut.h> //the glut file for windows operations
                      // it also includes gl.h and glu.h for the openGL library calls
 #include <math.h>
@@ -14,6 +12,7 @@ double rot, rdir;             // rotation
 double ball_speed;
 
 Jugador jugador(10.0,60.0); //jugador(rectangulo izquierdo)
+Jugador segundojugador(150.0, 60.0); //jugador 2(rectangulo derecho)
 
 GLfloat T1[16] = {1.,0.,0.,0.,\
                   0.,1.,0.,0.,\
@@ -49,15 +48,31 @@ void draw_ball() {
   
 }
 
+void controlJugador() {
+
+    if (GetAsyncKeyState('W') & 0x8000) {
+        jugador.movimiento(1.0, 120.0, 0.0);
+    }
+    if (GetAsyncKeyState('S') & 0x8000) {
+        jugador.movimiento(-1.0, 120.0, 0.0);
+    }
+
+    if (GetAsyncKeyState(VK_UP) & 0x8000) {
+        segundojugador.movimiento(1.0, 120.0, 0.0);
+    }
+    if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+        segundojugador.movimiento(-1.0, 120.0, 0.0);
+    }
+}
+
 void Display(void)
 {
   // swap the buffers
   glutSwapBuffers(); 
-  
-
 
   //clear all pixels with the specified clear color
   glClear(GL_COLOR_BUFFER_BIT);
+  controlJugador();
 
   // 160 is max X value in our world
  	
@@ -128,11 +143,16 @@ void Display(void)
   draw_ball();
   glLoadIdentity();
   jugador.dibujar();
+  glLoadIdentity();
+  segundojugador.dibujar();
 
   glutPostRedisplay(); 
 
-  
+}
 
+void update(void) {
+    controlJugador();
+    glutPostRedisplay();
 }
 
 
@@ -172,6 +192,7 @@ int main(int argc, char* argv[])
   init();
   glutDisplayFunc(Display);
   glutReshapeFunc(reshape);
+  glutIdleFunc(update);
   glutMainLoop();
 
   return 1;
