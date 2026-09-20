@@ -65,93 +65,140 @@ void controlJugador() {
     }
 }
 
+bool colision(float bx, float by, float radius, Jugador& p) {
+
+    float ball_izquierda = bx - radius;
+    float ball_derecha = bx + radius;
+    float ball_abajo = by - radius;
+    float ball_arriba = by + radius;
+
+    float jugador_izquierda = p.getPosicionX() - (p.getAnchura() / 2.0);
+    float jugador_derecha = p.getPosicionX() + (p.getAnchura() / 2.0);
+    float jugador_abajo = p.getPosicionY() - (p.getAltura() / 2.0);
+    float jugador_arriba = p.getPosicionY() + (p.getAltura() / 2.0);
+   
+    if (ball_derecha >= jugador_izquierda && ball_izquierda <= jugador_derecha && ball_arriba >= jugador_abajo && ball_abajo <= jugador_arriba) return true;
+    
+    return false;
+}
+
 void Display(void)
 {
-  // swap the buffers
-  glutSwapBuffers(); 
+    // swap the buffers
+    glutSwapBuffers();
 
-  //clear all pixels with the specified clear color
-  glClear(GL_COLOR_BUFFER_BIT);
-  controlJugador();
+    //clear all pixels with the specified clear color
+    glClear(GL_COLOR_BUFFER_BIT);
+    // 160 is max X value in our world
 
-  // 160 is max X value in our world
- 	
-	// Shape has hit the ground! Stop moving and start squashing down and then back up 
-	if (ypos == RadiusOfBall && ydir == -1  ) { 
-		sy = sy*squash ; 
-		
-		if (sy < 0.8)
-			// reached maximum suqash, now unsquash back up 
-			squash = 1.1;
-		else if (sy > 1.) {
-			// reset squash parameters and bounce ball back upwards
-			sy = 1.;
-			squash = 0.9;
-			ydir = 1;
-		}
-		sx = 1./sy;
+    /*  //reset transformation state
+      glLoadIdentity();
 
-        // 120 is max Y value in our world
-	    
-	} else {
-        // set Y position to increment 1.5 times the direction of the bounce
-        ypos += ydir*ball_speed;
+      // apply translation
+      glTranslatef(xpos,ypos, 0.);
 
-	    // If ball touches the top, change direction of ball downwards
-  	    if (ypos >= 120-RadiusOfBall){
-    	    ydir = -1;
-        }
-	    // If ball touches the bottom, change direction of ball upwards
-        else if (ypos < RadiusOfBall)
-		    ydir = 1;
-	}
-  
-/*  //reset transformation state 
-  glLoadIdentity();
-  
-  // apply translation
-  glTranslatef(xpos,ypos, 0.);
+      // Translate ball back to center
+      glTranslatef(0.,-RadiusOfBall, 0.);
+      // Scale the ball about its bottom
+      glScalef(sx,sy, 1.);
+      // Translate ball up so bottom is at the origin
+      glTranslatef(0.,RadiusOfBall, 0.);
+      // draw the ball
+      draw_ball();
+    */
 
-  // Translate ball back to center
-  glTranslatef(0.,-RadiusOfBall, 0.);
-  // Scale the ball about its bottom
-  glScalef(sx,sy, 1.);
-  // Translate ball up so bottom is at the origin
-  glTranslatef(0.,RadiusOfBall, 0.);
-  // draw the ball
-  draw_ball();
-*/
- 
-  //Translate the bouncing ball to its new position
-  T[12]= xpos;
-  T[13] = ypos;
-  glLoadMatrixf(T);
+    //Translate the bouncing ball to its new position
+    T[12] = xpos;
+    T[13] = ypos;
+    glLoadMatrixf(T);
 
-  T1[13] = -RadiusOfBall;
-  // Translate ball back to center
-  glMultMatrixf(T1);
-  S[0] = sx;
-  S[5] = sy;
-  // Scale the ball about its bottom
-  glMultMatrixf(S);
-  
-  T1[13] = RadiusOfBall;
-  // Translate ball up so bottom is at the origin
+    T1[13] = -RadiusOfBall;
+    // Translate ball back to center
+    glMultMatrixf(T1);
+    S[0] = sx;
+    S[5] = sy;
+    // Scale the ball about its bottom
+    glMultMatrixf(S);
 
-  glMultMatrixf(T1);
-  
-  draw_ball();
-  glLoadIdentity();
-  jugador.dibujar();
-  glLoadIdentity();
-  segundojugador.dibujar();
+    T1[13] = RadiusOfBall;
+    // Translate ball up so bottom is at the origin
 
-  glutPostRedisplay(); 
-
+    glMultMatrixf(T1);
+    draw_ball();
+    glLoadIdentity();
+    jugador.dibujar();
+    glLoadIdentity();
+    segundojugador.dibujar();
+    glutPostRedisplay(); 
 }
 
 void update(void) {
     controlJugador();
+    // Shape has hit the ground! Stop moving and start squashing down and then back up 
+    if (ypos <= RadiusOfBall && ydir == -1) {
+        ypos = RadiusOfBall;
+        sy = sy * squash;
+
+        if (sy < 0.8)
+            // reached maximum suqash, now unsquash back up 
+            squash = 1.1;
+        else if (sy > 1.) {
+            // reset squash parameters and bounce ball back upwards
+            sy = 1.;
+            squash = 0.9;
+            ydir = 1;
+        }
+        sx = 1. / sy;
+
+        // 120 is max Y value in our world
+
+    }
+    else {
+        // set Y position to increment 1.5 times the direction of the bounce
+        ypos += ydir * ball_speed;
+
+        // If ball touches the top, change direction of ball downwards
+        if (ypos >= 120 - RadiusOfBall) {
+            ydir = -1;
+        }
+        // If ball touches the bottom, change direction of ball upwards
+        else if (ypos < RadiusOfBall)
+            ydir = 1;
+    }
+
+    xpos += xdir * ball_speed;
+
+    if (colision(xpos, ypos, RadiusOfBall, jugador)) {
+
+        if (xpos >= jugador.getPosicionX() - jugador.getAnchura() / 2.0) {
+            xdir = 1.0;
+                 
+        }
+        if (ypos >= jugador.getPosicionY() + jugador.getAltura() / 2.0) {
+            ydir = 1.0;
+            
+        }
+        else if (ypos <= jugador.getPosicionY() - jugador.getAltura() / 2.0) {
+            ydir = -1.0;
+            
+        } 
+    }
+
+    if (colision(xpos, ypos, RadiusOfBall, segundojugador)) {
+       
+        if (xpos <= segundojugador.getPosicionX() + segundojugador.getAnchura() / 2.0) {
+            xdir = -1.0;
+              
+        }
+        if (ypos >= segundojugador.getPosicionY() + segundojugador.getAltura() / 2.0) {
+            ydir = 1.0;
+            
+        }
+        else if (ypos <= segundojugador.getPosicionY() - segundojugador.getAltura() / 2.0) {
+            ydir = -1.0;
+            
+        }
+    }
     glutPostRedisplay();
 }
 
@@ -190,9 +237,9 @@ int main(int argc, char* argv[])
   glutInitWindowSize (320, 240);   
   glutCreateWindow("Bouncing Ball");
   init();
+  glutIdleFunc(update);
   glutDisplayFunc(Display);
   glutReshapeFunc(reshape);
-  glutIdleFunc(update);
   glutMainLoop();
 
   return 1;
