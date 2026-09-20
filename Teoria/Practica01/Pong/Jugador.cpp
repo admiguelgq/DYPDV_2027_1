@@ -21,6 +21,14 @@ GLfloat Jugador::getAltura() {
 	return alto_jugador;
 }
 
+GLint Jugador::getPuntaje() {
+	return puntaje;
+}
+
+void Jugador::aumentaPuntaje() {
+	puntaje++;
+}
+
 void Jugador::movimiento(int direccion, GLfloat superior, GLfloat inferior) {
 	GLfloat nuevaPosY = ypos + (direccion * velocidad);
 	GLfloat mitad_alto = alto_jugador / 2.0;

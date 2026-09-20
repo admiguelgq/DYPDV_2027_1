@@ -1,3 +1,4 @@
+#include <iostream>
 #include <windows.h> //the windows include file, required by all windows applications
 #include <GL/glut.h> //the glut file for windows operations
                      // it also includes gl.h and glu.h for the openGL library calls
@@ -10,11 +11,16 @@ double xpos, ypos, ydir, xdir;    // x and y position for house to be drawn
 double sx, sy, squash;          // xy scale factors
 double rot, rdir;             // rotation
 double ball_speed;
-int tiempo_anterior = 0;
-double deltaTime = 0.0;
 
-Jugador jugador(10.0,60.0); //jugador(rectangulo izquierdo)
+Jugador jugador(10.0, 60.0); //jugador(rectangulo izquierdo)
 Jugador segundojugador(150.0, 60.0); //jugador 2(rectangulo derecho)
+
+int tiempo_anterior = 0;
+double tiempo_reaparecer = 0.0;
+double tiempo_espera = 1.0;
+double deltaTime = 0.0;  
+
+bool pelota_afuera = false;
 
 GLfloat T1[16] = {1.,0.,0.,0.,\
                   0.,1.,0.,0.,\
@@ -43,7 +49,6 @@ void MyCircle2f(GLfloat centerx, GLfloat centery, GLfloat radius){
 }
 
 GLfloat RadiusOfBall = 5.;
-// Draw the ball, centered at the origin
 void draw_ball() {
   glColor3f(1.0,1.0,1.0);
   MyCircle2f(0.,0.,RadiusOfBall);
@@ -51,7 +56,6 @@ void draw_ball() {
 }
 
 void controlJugador() {
-
     if (GetAsyncKeyState('W') & 0x8000) {
         jugador.movimiento(1.0, 120.0, 0.0);
     }
@@ -68,7 +72,6 @@ void controlJugador() {
 }
 
 bool colision(float bx, float by, float radius, Jugador& p) {
-
     float ball_izquierda = bx - radius;
     float ball_derecha = bx + radius;
     float ball_abajo = by - radius;
@@ -84,6 +87,41 @@ bool colision(float bx, float by, float radius, Jugador& p) {
     return false;
 }
 
+void partida(Jugador& p, Jugador& p_segundo, double tiempo) {
+    if (xpos+RadiusOfBall<0 && !pelota_afuera) {
+        pelota_afuera = true;
+        tiempo_reaparecer = 0.0;
+        p_segundo.aumentaPuntaje();  
+        system("cls");
+        std::cout << "Jugador 1: " << p.getPuntaje() << std::endl;
+        std::cout << "Jugador 2: " << p_segundo.getPuntaje() << std::endl;
+
+    }
+
+    if (xpos - RadiusOfBall > 160 && !pelota_afuera) {
+        pelota_afuera = true;
+        tiempo_reaparecer = 0.0;
+        p.aumentaPuntaje();
+        system("cls");
+        std::cout << "Jugador 1: " << p.getPuntaje() << std::endl;
+        std::cout << "Jugador 2: " << p_segundo.getPuntaje() << std::endl;
+
+    }
+    
+    if (pelota_afuera) {
+        tiempo_reaparecer += deltaTime;
+        ball_speed = 0.0;
+        xpos = 80; ypos = 80;
+        if (tiempo_reaparecer >= tiempo_espera) {
+            ball_speed = 100.0;
+            pelota_afuera = false;
+            tiempo_reaparecer = 0.0;
+
+        }
+       
+    }
+}
+
 void Display(void)
 {
     // swap the buffers
@@ -92,24 +130,8 @@ void Display(void)
     //clear all pixels with the specified clear color
     glClear(GL_COLOR_BUFFER_BIT);
     // 160 is max X value in our world
+    // 120 is max Y value in our world
 
-    /*  //reset transformation state
-      glLoadIdentity();
-
-      // apply translation
-      glTranslatef(xpos,ypos, 0.);
-
-      // Translate ball back to center
-      glTranslatef(0.,-RadiusOfBall, 0.);
-      // Scale the ball about its bottom
-      glScalef(sx,sy, 1.);
-      // Translate ball up so bottom is at the origin
-      glTranslatef(0.,RadiusOfBall, 0.);
-      // draw the ball
-      draw_ball();
-    */
-
-    //Translate the bouncing ball to its new position
     T[12] = xpos;
     T[13] = ypos;
     glLoadMatrixf(T);
@@ -154,19 +176,15 @@ void update(void) {
             ydir = 1;
         }
         sx = 1. / sy;
-
-        // 120 is max Y value in our world
-
     }
     else {
-        // set Y position to increment 1.5 times the direction of the bounce
+        
         ypos += ydir * ball_speed * deltaTime;
 
-        // If ball touches the top, change direction of ball downwards
         if (ypos >= 120 - RadiusOfBall) {
             ydir = -1;
         }
-        // If ball touches the bottom, change direction of ball upwards
+        
         else if (ypos < RadiusOfBall)
             ydir = 1;
     }
@@ -174,23 +192,22 @@ void update(void) {
     xpos += xdir * ball_speed * deltaTime;
 
     if (colision(xpos, ypos, RadiusOfBall, jugador)) {
-
+        ball_speed += 0.1;
         if (xpos >= jugador.getPosicionX() - jugador.getAnchura() / 2.0) {
-            xdir = 1.0;
-                 
+            xdir = 1.0;      
         }
+
         if (ypos >= jugador.getPosicionY() + jugador.getAltura() / 2.0) {
             ydir = 1.0;
-            
         }
+
         else if (ypos <= jugador.getPosicionY() - jugador.getAltura() / 2.0) {
-            ydir = -1.0;
-            
+            ydir = -1.0;  
         } 
     }
 
     if (colision(xpos, ypos, RadiusOfBall, segundojugador)) {
-       
+        ball_speed += 1.5;
         if (xpos <= segundojugador.getPosicionX() + segundojugador.getAnchura() / 2.0) {
             xdir = -1.0;
               
@@ -204,9 +221,9 @@ void update(void) {
             
         }
     }
+    partida(jugador,segundojugador,deltaTime);
     glutPostRedisplay();
 }
-
 
 void reshape (int w, int h)
 {
@@ -222,7 +239,6 @@ void reshape (int w, int h)
 
 }
 
-
 void init(void){
   //set the clear color
   glClearColor(0.0,0.0,0.0,0.0);
@@ -236,7 +252,6 @@ void init(void){
 
 int main(int argc, char* argv[])
 {
-
   glutInit( & argc, argv );
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   glutInitWindowSize (320, 240);   
