@@ -10,6 +10,8 @@ double xpos, ypos, ydir, xdir;    // x and y position for house to be drawn
 double sx, sy, squash;          // xy scale factors
 double rot, rdir;             // rotation
 double ball_speed;
+int tiempo_anterior = 0;
+double deltaTime = 0.0;
 
 Jugador jugador(10.0,60.0); //jugador(rectangulo izquierdo)
 Jugador segundojugador(150.0, 60.0); //jugador 2(rectangulo derecho)
@@ -134,6 +136,9 @@ void Display(void)
 
 void update(void) {
     controlJugador();
+    double tiempo_actual = glutGet(GLUT_ELAPSED_TIME);
+    deltaTime = (tiempo_actual - tiempo_anterior) / 1000.0;
+    tiempo_anterior = tiempo_actual;
     // Shape has hit the ground! Stop moving and start squashing down and then back up 
     if (ypos <= RadiusOfBall && ydir == -1) {
         ypos = RadiusOfBall;
@@ -155,7 +160,7 @@ void update(void) {
     }
     else {
         // set Y position to increment 1.5 times the direction of the bounce
-        ypos += ydir * ball_speed;
+        ypos += ydir * ball_speed * deltaTime;
 
         // If ball touches the top, change direction of ball downwards
         if (ypos >= 120 - RadiusOfBall) {
@@ -166,7 +171,7 @@ void update(void) {
             ydir = 1;
     }
 
-    xpos += xdir * ball_speed;
+    xpos += xdir * ball_speed * deltaTime;
 
     if (colision(xpos, ypos, RadiusOfBall, jugador)) {
 
@@ -225,7 +230,7 @@ void init(void){
   xpos = 80; ypos = RadiusOfBall; xdir = 1; ydir = 1;
   sx = 1.; sy = 1.; squash = 0.9;
   rot = 0;
-  ball_speed = 1.5;
+  ball_speed = 100.0;
 
 }
 
