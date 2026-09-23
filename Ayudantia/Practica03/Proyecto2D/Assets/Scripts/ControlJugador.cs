@@ -54,11 +54,24 @@ public class ControlJugador : MonoBehaviour
 
         transform.position += new Vector3(velocidadActual * delta, 0, 0);
 
-        if (Input.GetAxis("Jump") > 0 && jugador.enSuelo)
+        if (jugador.enSuelo)
+            coyoteTimer = tiempoCoyote;
+        else
+            coyoteTimer -= delta;
+
+        if (Input.GetAxis("Jump") > 0)
+            bufferTimer = tiempoBufferSalto;
+        else
+            bufferTimer -= delta;
+
+
+        if (bufferTimer > 0 && coyoteTimer > 0)
         {
             velocidadVertical = 10f;
             jugador.enSuelo = false;
             tiempoSaltoActual = 0;
+            coyoteTimer = 0;
+            bufferTimer = 0;
 
         }
 
