@@ -27,6 +27,10 @@ public class ControlJugador : MonoBehaviour
     private float coyoteTimer = 0f;
     private float bufferTimer = 0f;
 
+    public bool estaCaminando;
+    public bool estaSaltando;
+    public bool estaCayendo;
+
     private void Awake()
     {
         jugador = GetComponent<Jugador>();
@@ -52,8 +56,6 @@ public class ControlJugador : MonoBehaviour
                 velocidadActual = 0;
         }
 
-        transform.position += new Vector3(velocidadActual * delta, 0, 0);
-
         if (jugador.enSuelo)
             coyoteTimer = tiempoCoyote;
         else
@@ -75,6 +77,11 @@ public class ControlJugador : MonoBehaviour
 
         }
 
+        if (velocidadVertical < 0)
+            velocidadVertical += gravedadCaida * delta;
+        else
+            velocidadVertical += gravedad * delta;
+
         if (!jugador.enSuelo && Input.GetAxis("Jump") > 0)
         {
             if (tiempoSaltoActual < tiempoMaxSalto)
@@ -88,6 +95,7 @@ public class ControlJugador : MonoBehaviour
         {
             tiempoSaltoActual = tiempoMaxSalto;
         }
+
         if (jugador.enSuelo)
         {
             velocidadVertical = 0;
@@ -96,6 +104,12 @@ public class ControlJugador : MonoBehaviour
         {
             velocidadVertical += gravedad * delta;
         }
-        transform.position += new Vector3(0, velocidadVertical * delta, 0);
+
+        transform.position += new Vector3(velocidadActual * delta, velocidadVertical * delta, 0);
+
+        estaCaminando = Mathf.Abs(velocidadActual) > 0.1f;
+        estaSaltando = velocidadVertical > 0.1f;
+        estaCayendo = velocidadVertical < -0.1f;
+       
     }
 }
