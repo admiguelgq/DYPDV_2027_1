@@ -29,8 +29,8 @@ void Jugador::aumentaPuntaje() {
 	puntaje++;
 }
 
-void Jugador::movimiento(int direccion, GLfloat superior, GLfloat inferior) {
-	GLfloat nuevaPosY = ypos + (direccion * velocidad);
+void Jugador::movimiento(int direccion, GLfloat superior, GLfloat inferior,double tiempo) {
+	GLfloat nuevaPosY = ypos + (direccion * velocidad * static_cast<GLfloat>(tiempo));
 	GLfloat mitad_alto = alto_jugador / 2.0;
 
 	if (direccion > 0 && (nuevaPosY + mitad_alto) <= superior) {

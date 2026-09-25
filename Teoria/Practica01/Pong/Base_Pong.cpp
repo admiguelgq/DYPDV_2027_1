@@ -54,19 +54,19 @@ void draw_ball() {
   
 }
 
-void controlJugador() {
+void controlJugador(double time) {
     if (GetAsyncKeyState('W') & 0x8000) {
-        jugador.movimiento(1.0, 120.0, 0.0);
+        jugador.movimiento(1.0, 120.0, 0.0,time);
     }
     if (GetAsyncKeyState('S') & 0x8000) {
-        jugador.movimiento(-1.0, 120.0, 0.0);
+        jugador.movimiento(-1.0, 120.0, 0.0,time);
     }
 
     if (GetAsyncKeyState(VK_UP) & 0x8000) {
-        segundojugador.movimiento(1.0, 120.0, 0.0);
+        segundojugador.movimiento(1.0, 120.0, 0.0,time);
     }
     if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-        segundojugador.movimiento(-1.0, 120.0, 0.0);
+        segundojugador.movimiento(-1.0, 120.0, 0.0,time);
     }
 }
 
@@ -174,13 +174,12 @@ void Display(void)
 }
 
 void update(void) {
-    controlJugador();
     double tiempo_actual = glutGet(GLUT_ELAPSED_TIME);
     deltaTime = (tiempo_actual - tiempo_anterior) / 1000.0;
     tiempo_anterior = tiempo_actual;
-
     if (deltaTime > 0.05) deltaTime = 0.05;
-   
+    controlJugador(deltaTime);
+
     ypos += ydir * ball_speed * deltaTime;
     xpos += xdir * ball_speed * deltaTime;
 

@@ -7,7 +7,7 @@ private:
     GLfloat ypos;
     GLfloat ancho_jugador = 5.0;
     GLfloat alto_jugador = 15.0;
-    GLfloat velocidad = 3.0;
+    GLfloat velocidad = 150.0;
     GLint puntaje = 0;
 
 public:
@@ -19,6 +19,6 @@ public:
     GLfloat getAltura();
     GLint getPuntaje();
     void aumentaPuntaje();
-    void movimiento(int direccion, GLfloat superior, GLfloat inferior);
+    void movimiento(int direccion, GLfloat superior, GLfloat inferior, double tiempo);
     void dibujar() const;
 };
