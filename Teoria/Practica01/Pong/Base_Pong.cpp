@@ -35,7 +35,6 @@ GLfloat T[16] = {1.,0.,0.,0.,\
                  0.,0.,1.,0.,\
                  0.,0.,0.,1.};
 
-#define PI 3.1415926535898 
 GLint circle_points = 100; 
 void MyCircle2f(GLfloat centerx, GLfloat centery, GLfloat radius){
   GLint i;
@@ -82,8 +81,30 @@ bool colision(float bx, float by, float radius, Jugador& p) {
     float jugador_abajo = p.getPosicionY() - (p.getAltura() / 2.0);
     float jugador_arriba = p.getPosicionY() + (p.getAltura() / 2.0);
    
-    if (ball_derecha >= jugador_izquierda && ball_izquierda <= jugador_derecha && ball_arriba >= jugador_abajo && ball_abajo <= jugador_arriba) return true;
+    if (ball_derecha >= jugador_izquierda && ball_izquierda <= jugador_derecha && ball_arriba 
+        >=jugador_abajo && ball_abajo <= jugador_arriba) return true;
     
+    return false;
+}
+
+bool tunnelingProof(Jugador& p, float tiempo) {
+    
+    float desplazamientoX = xdir * ball_speed * tiempo;
+    float desplazamientoY = ydir * ball_speed * tiempo;
+    int particiones = 10;
+    float partX = desplazamientoX / particiones;
+    float partY = desplazamientoY / particiones;
+    float tempX = xpos;
+    float tempY = ypos;
+    int i = 0;
+    while (i < particiones) {
+        tempX += partX;
+        tempY += partY;
+        if (colision(tempX, tempY, RadiusOfBall, p)) {
+            return true; 
+        }
+        i++;
+    }
     return false;
 }
 
@@ -91,8 +112,7 @@ void partida(Jugador& p, Jugador& p_segundo, double tiempo) {
     if (xpos+RadiusOfBall<0 && !pelota_afuera) {
         pelota_afuera = true;
         tiempo_reaparecer = 0.0;
-        p_segundo.aumentaPuntaje();  
-        system("cls");
+        p_segundo.aumentaPuntaje();
         std::cout << "Jugador 1: " << p.getPuntaje() << std::endl;
         std::cout << "Jugador 2: " << p_segundo.getPuntaje() << std::endl;
 
@@ -102,17 +122,17 @@ void partida(Jugador& p, Jugador& p_segundo, double tiempo) {
         pelota_afuera = true;
         tiempo_reaparecer = 0.0;
         p.aumentaPuntaje();
-        system("cls");
         std::cout << "Jugador 1: " << p.getPuntaje() << std::endl;
         std::cout << "Jugador 2: " << p_segundo.getPuntaje() << std::endl;
 
     }
     
     if (pelota_afuera) {
-        tiempo_reaparecer += deltaTime;
+        tiempo_reaparecer += tiempo;
         ball_speed = 0.0;
-        xpos = 80; ypos = 80;
+        xpos = 80; ypos = 60;
         if (tiempo_reaparecer >= tiempo_espera) {
+            xdir = xdir*-1;
             ball_speed = 100.0;
             pelota_afuera = false;
             tiempo_reaparecer = 0.0;
@@ -124,14 +144,11 @@ void partida(Jugador& p, Jugador& p_segundo, double tiempo) {
 
 void Display(void)
 {
-    // swap the buffers
-    glutSwapBuffers();
-
     //clear all pixels with the specified clear color
     glClear(GL_COLOR_BUFFER_BIT);
     // 160 is max X value in our world
     // 120 is max Y value in our world
-
+    glPushMatrix();
     T[12] = xpos;
     T[13] = ypos;
     glLoadMatrixf(T);
@@ -149,11 +166,11 @@ void Display(void)
 
     glMultMatrixf(T1);
     draw_ball();
-    glLoadIdentity();
+    glPopMatrix();
+
     jugador.dibujar();
-    glLoadIdentity();
     segundojugador.dibujar();
-    glutPostRedisplay(); 
+    glutSwapBuffers();
 }
 
 void update(void) {
@@ -161,42 +178,21 @@ void update(void) {
     double tiempo_actual = glutGet(GLUT_ELAPSED_TIME);
     deltaTime = (tiempo_actual - tiempo_anterior) / 1000.0;
     tiempo_anterior = tiempo_actual;
-    // Shape has hit the ground! Stop moving and start squashing down and then back up 
-    if (ypos <= RadiusOfBall && ydir == -1) {
-        ypos = RadiusOfBall;
-        sy = sy * squash;
 
-        if (sy < 0.8)
-            // reached maximum suqash, now unsquash back up 
-            squash = 1.1;
-        else if (sy > 1.) {
-            // reset squash parameters and bounce ball back upwards
-            sy = 1.;
-            squash = 0.9;
-            ydir = 1;
-        }
-        sx = 1. / sy;
-    }
-    else {
-        
-        ypos += ydir * ball_speed * deltaTime;
-
-        if (ypos >= 120 - RadiusOfBall) {
-            ydir = -1;
-        }
-        
-        else if (ypos < RadiusOfBall)
-            ydir = 1;
-    }
-
+    if (deltaTime > 0.05) deltaTime = 0.05;
+   
+    ypos += ydir * ball_speed * deltaTime;
     xpos += xdir * ball_speed * deltaTime;
 
-    if (colision(xpos, ypos, RadiusOfBall, jugador)) {
-        ball_speed += 0.1;
-        if (xpos >= jugador.getPosicionX() - jugador.getAnchura() / 2.0) {
-            xdir = 1.0;      
+    if (ypos >= 120 - RadiusOfBall) ydir = -1;
+        
+    else if (ypos < RadiusOfBall) ydir = 1;
+    
+    if (tunnelingProof(jugador, deltaTime)) {
+        if (xpos >= jugador.getPosicionX()) {
+            xdir = 1.0;
         }
-
+             
         if (ypos >= jugador.getPosicionY() + jugador.getAltura() / 2.0) {
             ydir = 1.0;
         }
@@ -204,14 +200,15 @@ void update(void) {
         else if (ypos <= jugador.getPosicionY() - jugador.getAltura() / 2.0) {
             ydir = -1.0;  
         } 
+        ball_speed += 0.5;
     }
 
-    if (colision(xpos, ypos, RadiusOfBall, segundojugador)) {
-        ball_speed += 1.5;
-        if (xpos <= segundojugador.getPosicionX() + segundojugador.getAnchura() / 2.0) {
+    if (tunnelingProof(segundojugador, deltaTime)) {
+        if (xpos <= segundojugador.getPosicionX()) {
             xdir = -1.0;
-              
+
         }
+         
         if (ypos >= segundojugador.getPosicionY() + segundojugador.getAltura() / 2.0) {
             ydir = 1.0;
             
@@ -220,6 +217,7 @@ void update(void) {
             ydir = -1.0;
             
         }
+        ball_speed += 0.5;
     }
     partida(jugador,segundojugador,deltaTime);
     glutPostRedisplay();
@@ -247,6 +245,7 @@ void init(void){
   sx = 1.; sy = 1.; squash = 0.9;
   rot = 0;
   ball_speed = 100.0;
+  tiempo_anterior = glutGet(GLUT_ELAPSED_TIME);
 
 }
 
