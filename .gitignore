@@ -1,0 +1,14 @@
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bin/
+obj/
+.vs/
+*.exe
+*.dll
+*.lib
+*.pdb
+*.obj
+*.ilk
+nul
