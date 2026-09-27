@@ -31,9 +31,12 @@ public class ControlJugador : MonoBehaviour
     public bool estaSaltando;
     public bool estaCayendo;
 
+    private Animator anim;
+
     private void Awake()
     {
         jugador = GetComponent<Jugador>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -110,6 +113,10 @@ public class ControlJugador : MonoBehaviour
         estaCaminando = Mathf.Abs(velocidadActual) > 0.1f;
         estaSaltando = velocidadVertical > 0.1f;
         estaCayendo = velocidadVertical < -0.1f;
+
+        anim.SetBool("Caminando", estaCaminando);
+        anim.SetBool("Saltando", estaSaltando);
+        anim.SetBool("Cayendo", estaCayendo);
 
     }
 }
