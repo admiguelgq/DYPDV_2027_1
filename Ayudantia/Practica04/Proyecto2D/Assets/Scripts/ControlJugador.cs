@@ -53,7 +53,13 @@ public class ControlJugador : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         velocidadActual += aceleracion * h * delta;
         velocidadActual = Mathf.Clamp(velocidadActual, -velocidadMax, velocidadMax);
-   
+
+        if (h > 0)
+            transform.localScale = new Vector3(1, 1, 1);  
+       
+        else if (h < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        
         if (h == 0)
         {
             if (velocidadActual > 0)
@@ -118,9 +124,9 @@ public class ControlJugador : MonoBehaviour
 
         transform.position += new Vector3(velocidadActual * delta, velocidadVertical * delta, 0);
 
-        estaCaminando = Mathf.Abs(velocidadActual) > 0.1f;
-        estaSaltando = velocidadVertical > 0.1f;
-        estaCayendo = velocidadVertical < -0.1f;
+        estaCaminando = Mathf.Abs(velocidadActual) > 0.1f && jugador.enSuelo;
+        estaSaltando = velocidadVertical > 0.1f && !jugador.enSuelo;
+        estaCayendo = velocidadVertical < -0.1f && !jugador.enSuelo;
 
         anim.SetBool("Caminando", estaCaminando);
         anim.SetBool("Saltando", estaSaltando);
@@ -134,7 +140,5 @@ public class ControlJugador : MonoBehaviour
                 audioSrc.PlayOneShot(sonidoPaso);
             }
         }
-      
-
     }
 }
