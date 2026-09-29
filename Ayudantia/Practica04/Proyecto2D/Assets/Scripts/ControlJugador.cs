@@ -33,10 +33,16 @@ public class ControlJugador : MonoBehaviour
 
     private Animator anim;
 
+    public AudioClip sonidoSalto;
+    public AudioClip sonidoPaso;
+    public AudioSource audioSrc;
+
+
     private void Awake()
     {
         jugador = GetComponent<Jugador>();
         anim = GetComponent<Animator>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -77,6 +83,8 @@ public class ControlJugador : MonoBehaviour
             tiempoSaltoActual = 0;
             coyoteTimer = 0;
             bufferTimer = 0;
+            audioSrc.pitch = 1.0f;
+            audioSrc.PlayOneShot(sonidoSalto);
 
         }
 
@@ -117,6 +125,16 @@ public class ControlJugador : MonoBehaviour
         anim.SetBool("Caminando", estaCaminando);
         anim.SetBool("Saltando", estaSaltando);
         anim.SetBool("Cayendo", estaCayendo);
+
+        if(estaCaminando && jugador.enSuelo)
+        {
+            if (!audioSrc.isPlaying)
+            {
+                audioSrc.pitch = 0.4f;
+                audioSrc.PlayOneShot(sonidoPaso);
+            }
+        }
+      
 
     }
 }

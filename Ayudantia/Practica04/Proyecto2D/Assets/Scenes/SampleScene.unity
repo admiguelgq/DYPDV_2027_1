@@ -370,6 +370,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &1162180389 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 9108659001462664639, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+  m_PrefabInstance: {fileID: 7562662704571408392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7562662704571408392
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -430,6 +435,14 @@ PrefabInstance:
       propertyPath: m_GravityScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: audioSrc
+      value: 
+      objectReference: {fileID: 1162180389}
+    - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: sonidoPaso
+      value: 
+      objectReference: {fileID: 8300000, guid: a16f2b450ef64a0459678a33e7e20b7f, type: 3}
     - target: {fileID: 9063182010788389923, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
       propertyPath: m_Size.x
       value: 0.4
