@@ -429,7 +429,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3817815369952502012, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
       propertyPath: m_TagString
-      value: Suelo
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4508865513772101374, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
       propertyPath: m_GravityScale
