@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 9108659001462664639}
   m_Layer: 0
   m_Name: Jugador
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,7 +132,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.0001, y: 0.0001}
+  m_Size: {x: 0.34, y: 0.34}
   m_EdgeRadius: 0
 --- !u!50 &4508865513772101374
 Rigidbody2D:
@@ -173,6 +173,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0d3451639114ce47baa9dd414f9d644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocidad: 2
+  vida: 1
   enSuelo: 0
 --- !u!114 &5564135260362200361
 MonoBehaviour:

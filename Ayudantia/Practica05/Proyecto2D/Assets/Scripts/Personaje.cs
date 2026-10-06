@@ -19,7 +19,7 @@ public class Personaje : MonoBehaviour
     public virtual void RecibirDano(int cantidad)
     {
         vida -= cantidad;
-        if (vida < 0)
+        if (vida <= 0)
             Morir();
     }
 
