@@ -16,7 +16,12 @@ public class PlayerMovementAnim : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        float speedValue = new Vector2(x, z).magnitude;
+
+        float inputMagnitude = new Vector2(x, z).magnitude;
+
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float speedValue = isRunning ? inputMagnitude * 1.0f : inputMagnitude * 0.5f;
+
         anim.SetFloat("Speed", speedValue);
 
         Vector3 direction = new Vector3(x, 0, z);
@@ -29,7 +34,8 @@ public class PlayerMovementAnim : MonoBehaviour
             );
 
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+
+        if (Input.GetButtonDown("Jump"))
         {
             anim.SetBool("IsJumping", true);
         }
@@ -37,5 +43,7 @@ public class PlayerMovementAnim : MonoBehaviour
         {
             anim.SetBool("IsJumping", false);
         }
+
+        
     }
 }
