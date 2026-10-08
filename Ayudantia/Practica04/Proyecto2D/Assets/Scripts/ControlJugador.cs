@@ -72,10 +72,16 @@ public class ControlJugador : MonoBehaviour
         }
 
         if (jugador.enSuelo)
-            coyoteTimer = tiempoCoyote;
+            coyoteTimer = tiempoCoyote;  
         else
+        {
             coyoteTimer -= delta;
-
+            if (velocidadVertical < 0)
+                velocidadVertical += gravedadCaida * delta;
+            else
+                velocidadVertical += gravedad * delta;
+        }
+            
         if (Input.GetAxis("Jump") > 0)
             bufferTimer = tiempoBufferSalto;
         else
@@ -94,11 +100,6 @@ public class ControlJugador : MonoBehaviour
 
         }
 
-        if (velocidadVertical < 0)
-            velocidadVertical += gravedadCaida * delta;
-        else
-            velocidadVertical += gravedad * delta;
-
         if (!jugador.enSuelo && Input.GetAxis("Jump") > 0)
         {
             if (tiempoSaltoActual < tiempoMaxSalto)
@@ -112,7 +113,6 @@ public class ControlJugador : MonoBehaviour
         {
             tiempoSaltoActual = tiempoMaxSalto;
         }
-
         if (jugador.enSuelo)
         {
             velocidadVertical = 0;

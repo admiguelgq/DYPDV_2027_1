@@ -74,7 +74,14 @@ public class ControlJugador : MonoBehaviour
         if (jugador.enSuelo)
             coyoteTimer = tiempoCoyote;
         else
+        {
             coyoteTimer -= delta;
+            if (velocidadVertical < 0)
+                velocidadVertical += gravedadCaida * delta;
+            else
+                velocidadVertical += gravedad * delta;
+        }
+            
 
         if (Input.GetAxis("Jump") > 0)
             bufferTimer = tiempoBufferSalto;
@@ -93,11 +100,6 @@ public class ControlJugador : MonoBehaviour
             audioSrc.PlayOneShot(sonidoSalto);
 
         }
-
-        if (velocidadVertical < 0)
-            velocidadVertical += gravedadCaida * delta;
-        else
-            velocidadVertical += gravedad * delta;
 
         if (!jugador.enSuelo && Input.GetAxis("Jump") > 0)
         {
