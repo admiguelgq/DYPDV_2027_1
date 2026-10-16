@@ -35,7 +35,23 @@ public class ControlJugador : MonoBehaviour
 
     public AudioClip sonidoSalto;
     public AudioClip sonidoPaso;
+    public AudioClip DisparoSonido;
     public AudioSource audioSrc;
+
+    public GameObject prefabProyectil;
+    public Transform puntoDisparo;
+
+    void Disparar()
+    {
+        GameObject p = Instantiate(prefabProyectil, puntoDisparo.position,
+            Quaternion.identity);
+        Vector2 dir = (transform.localScale.x < 0) ?
+        Vector2.left : Vector2.right;
+        float velocidadJugador = Mathf.Abs(velocidadActual);
+        p.GetComponent<Proyectil>().Inicializar(dir, velocidadJugador);
+        audioSrc.pitch = 1.0f;
+        audioSrc.PlayOneShot(DisparoSonido);
+    }
 
 
     private void Awake()
@@ -141,6 +157,11 @@ public class ControlJugador : MonoBehaviour
                 audioSrc.pitch = 0.4f;
                 audioSrc.PlayOneShot(sonidoPaso);
             }
+        }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Disparar();
         }
     }
 }

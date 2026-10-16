@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 93817495}
   m_Layer: 0
   m_Name: Enemigo
-  m_TagString: Untagged
+  m_TagString: Enemigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -831,6 +831,11 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 9108659001462664639, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
   m_PrefabInstance: {fileID: 7562662704571408392}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1162180395 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 559064166291833781, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+  m_PrefabInstance: {fileID: 7562662704571408392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2023940456
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,63 +966,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &3217193770067694452
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1478328738897079857, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_Name
-      value: Proyectil
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.034692448
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5599367568705830482, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
 --- !u!1001 &7562662704571408392
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1078,6 +1026,10 @@ PrefabInstance:
       propertyPath: m_GravityScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5061177304359484810, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
       propertyPath: audioSrc
       value: 
@@ -1086,6 +1038,18 @@ PrefabInstance:
       propertyPath: sonidoPaso
       value: 
       objectReference: {fileID: 8300000, guid: a16f2b450ef64a0459678a33e7e20b7f, type: 3}
+    - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: puntoDisparo
+      value: 
+      objectReference: {fileID: 1162180395}
+    - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: DisparoSonido
+      value: 
+      objectReference: {fileID: 8300000, guid: 504a6f7ef4c679d41b19a7188cc878de, type: 3}
+    - target: {fileID: 5564135260362200361, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
+      propertyPath: prefabProyectil
+      value: 
+      objectReference: {fileID: 1478328738897079857, guid: 9189e398005acdf47a57ef0a6ff77b8b, type: 3}
     - target: {fileID: 9063182010788389923, guid: d29f736e02c199e4ba79807c34decfdb, type: 3}
       propertyPath: m_Size.x
       value: 0.4
@@ -1113,4 +1077,3 @@ SceneRoots:
   - {fileID: 2023940459}
   - {fileID: 435604419}
   - {fileID: 729419626}
-  - {fileID: 3217193770067694452}
